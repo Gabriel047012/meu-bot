@@ -1,7 +1,8 @@
+import os
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
-TOKEN = "8729573012:AAHoqv7zgtfIj8_A8viDXlcrRdEXZ447bBw"
+TOKEN = os.environ["TOKEN"]"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("""
