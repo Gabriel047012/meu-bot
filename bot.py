@@ -55,7 +55,7 @@ async def previas(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # FOTO
     await update.message.reply_photo(
-        photo="COLE_AQUI_O_FILE_ID_DA_FOTO"
+        photo="AgACAgEAAxkBAAM-am0LfMg8vBG11NgwN5UOZI41FyAAAlcMaxuJ3GlH5d26HfwQ6NkBAAMCAAN5AAM9BA"
     )
 
     # VÍDEO
