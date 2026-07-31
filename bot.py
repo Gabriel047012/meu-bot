@@ -2,7 +2,13 @@ import os
 
 from fastapi import FastAPI, Request
 from telegram import Update
-from telegram.ext import Application, CommandHandler, ContextTypes
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    ContextTypes,
+    MessageHandler,
+    filters,
+)
 
 TOKEN = os.environ["TOKEN"]
 WEBHOOK_URL = "https://meu-bot-pwx3.onrender.com"
@@ -12,6 +18,7 @@ telegram_app = Application.builder().token(TOKEN).build()
 app = FastAPI()
 
 
+# /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         """😈OQUE VOCÊ VAI ENCONTRAR AQUI?🔥
@@ -26,10 +33,14 @@ Gozando dentro💦
 ________
 
 📋PARA CONSULTAR OS PLANOS DIGITE:
-/planos"""
+/planos
+
+📸 PARA VER ALGUMAS PRÉVIAS DIGITE:
+/previas"""
     )
 
 
+# /planos
 async def planos(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         """📋PLANO MENSAL - R$ 4,99 Apenas
@@ -38,13 +49,49 @@ async def planos(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
+# /previas
 async def previas(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("🔥 Confira algumas prévias:")
+
+    # FOTO
+    await update.message.reply_photo(
+        photo="COLE_AQUI_O_FILE_ID_DA_FOTO"
+    )
+
+    # VÍDEO
+    await update.message.reply_video(
+        video="COLE_AQUI_O_FILE_ID_DO_VIDEO"
+    )
+
+
+# Captura o File ID
+async def pegar_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    if update.message.photo:
+        file_id = update.message.photo[-1].file_id
+        await update.message.reply_text(
+            f"📷 FILE ID DA FOTO:\n\n{file_id}"
+        )
+
+    elif update.message.video:
+        file_id = update.message.video.file_id
+        await update.message.reply_text(
+            f"🎥 FILE ID DO VÍDEO:\n\n{file_id}"
+        )
+
+    else:
+        await update.message.reply_text(
+            "Envie uma foto ou um vídeo."
+        )
 
 
 telegram_app.add_handler(CommandHandler("start", start))
 telegram_app.add_handler(CommandHandler("planos", planos))
 telegram_app.add_handler(CommandHandler("previas", previas))
+telegram_app.add_handler(CommandHandler("id", pegar_id))
+
+telegram_app.add_handler(MessageHandler(filters.PHOTO, pegar_id))
+telegram_app.add_handler(MessageHandler(filters.VIDEO, pegar_id))
 
 
 @app.on_event("startup")
