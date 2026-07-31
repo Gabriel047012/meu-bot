@@ -38,8 +38,13 @@ async def planos(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
+async def previas(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("🔥 Confira algumas prévias:")
+
+
 telegram_app.add_handler(CommandHandler("start", start))
 telegram_app.add_handler(CommandHandler("planos", planos))
+telegram_app.add_handler(CommandHandler("previas", previas))
 
 
 @app.on_event("startup")
