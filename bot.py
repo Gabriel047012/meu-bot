@@ -63,7 +63,7 @@ async def previas(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # VÍDEO
     await update.message.reply_video(
-        video="COLE_AQUI_O_FILE_ID_DO_VIDEO"
+        video="BAACAgEAAxkBAANcam4MYXQ93cFRlJlFTXq-067_lA4AAkAIAAJgpnFHBio6HNjhku09BA"
     )
 
 
