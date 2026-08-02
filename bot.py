@@ -11,6 +11,7 @@ from telegram.ext import (
 )
 
 TOKEN = os.environ["TOKEN"]
+MP_ACCESS_TOKEN = os.environ["MP_ACCESS_TOKEN"]
 WEBHOOK_URL = "https://meu-bot-pwx3.onrender.com"
 
 telegram_app = Application.builder().token(TOKEN).build()
