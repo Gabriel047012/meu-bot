@@ -1,5 +1,6 @@
 import os
 
+import mercadopago
 from fastapi import FastAPI, Request
 from telegram import Update
 from telegram.ext import (
@@ -14,9 +15,17 @@ TOKEN = os.environ["TOKEN"]
 MP_ACCESS_TOKEN = os.environ["MP_ACCESS_TOKEN"]
 WEBHOOK_URL = "https://meu-bot-pwx3.onrender.com"
 
+sdk = mercadopago.SDK(MP_ACCESS_TOKEN)
+
 telegram_app = Application.builder().token(TOKEN).build()
 
 app = FastAPI()
+
+
+async def pix(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "✅ Mercado Pago conectado com sucesso!"
+    )
 
 
 # /start
@@ -98,6 +107,7 @@ telegram_app.add_handler(CommandHandler("start", start))
 telegram_app.add_handler(CommandHandler("planos", planos))
 telegram_app.add_handler(CommandHandler("previas", previas))
 telegram_app.add_handler(CommandHandler("id", pegar_id))
+telegram_app.add_handler(CommandHandler("pix", pix))
 
 telegram_app.add_handler(MessageHandler(filters.PHOTO, pegar_id))
 telegram_app.add_handler(MessageHandler(filters.VIDEO, pegar_id))
