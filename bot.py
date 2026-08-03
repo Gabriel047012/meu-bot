@@ -67,6 +67,11 @@ async def previas(update: Update, context: ContextTypes.DEFAULT_TYPE):
         video="BAACAgEAAxkBAANcam4MYXQ93cFRlJlFTXq-067_lA4AAkAIAAJgpnFHBio6HNjhku09BA"
     )
 
+# VÍDEO
+    await update.message.reply_video(
+        video="BAACAgEAAxkBAAOaanCWf0IJlHtAsOHtmHRrpZy_R7EAAn8IAAKrO4hHVyghlY3FbqQ9BA"
+    )
+
 
 # Captura o File ID
 async def pegar_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
