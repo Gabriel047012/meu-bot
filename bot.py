@@ -140,6 +140,11 @@ Após realizar o pagamento, aguarde a confirmação automática. ✅
     )
 
 
+async def pegar_id_grupo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    await update.message.reply_text(f"O ID deste grupo é:\n`{chat_id}`", parse_mode="Markdown")
+
+
 # /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -215,7 +220,7 @@ async def pegar_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "Envie uma foto ou um vídeo."
         )
 
-
+application.add_handler(CommandHandler("id", pegar_id_grupo))
 telegram_app.add_handler(CommandHandler("start", start))
 telegram_app.add_handler(CommandHandler("planos", planos))
 telegram_app.add_handler(CommandHandler("previas", previas))
