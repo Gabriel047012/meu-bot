@@ -168,6 +168,7 @@ async def planos(update: Update, context: ContextTypes.DEFAULT_TYPE):
         """📋PLANO MENSAL - R$ 4,99 Apenas
 
 😈Tenha acesso a uma grande variedade de conteúdos por menos de 5 reais por mês!
+🔥/assinar🎁
 
 📸🔥PARA VER ALGUMAS PRÉVIAS DIGITE:
 /previas"""
