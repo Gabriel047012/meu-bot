@@ -220,7 +220,7 @@ async def pegar_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "Envie uma foto ou um vídeo."
         )
 
-application.add_handler(CommandHandler("id", pegar_id_grupo))
+telegram_app.add_handler(CommandHandler("id", pegar_id_grupo))
 telegram_app.add_handler(CommandHandler("start", start))
 telegram_app.add_handler(CommandHandler("planos", planos))
 telegram_app.add_handler(CommandHandler("previas", previas))
