@@ -141,6 +141,13 @@ Após realizar o pagamento, aguarde a confirmação automática. ✅
     )
 
 
+async def verificar_pagamento(payment_id):
+
+    pagamento = sdk.payment().get(payment_id)
+
+    return pagamento["response"]
+
+
 async def pegar_id_grupo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     await update.message.reply_text(f"O ID deste grupo é:\n`{chat_id}`", parse_mode="Markdown")
@@ -259,7 +266,17 @@ async def mercadopago_webhook(request: Request):
 
     dados = await request.json()
 
-    print("Webhook Mercado Pago:", dados)
+    print(dados)
+
+    if dados.get("type") == "payment":
+
+        payment_id = dados["data"]["id"]
+
+        pagamento = await verificar_pagamento(payment_id)
+
+        print("Pagamento consultado:")
+
+        print(pagamento)
 
     return {"status": "ok"}
 
