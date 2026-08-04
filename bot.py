@@ -100,16 +100,19 @@ def salvar_pagamentos(dados):
 
 async def assinar(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    preference_data = {
-        "items": [
-            {
-                "title": "Plano Mensal",
-                "quantity": 1,
-                "currency_id": "BRL",
-                "unit_price": 4.99,
-            }
-        ]
-    }
+preference_data = {
+    "items": [
+        {
+            "title": "Plano Mensal",
+            "quantity": 1,
+            "currency_id": "BRL",
+            "unit_price": 4.99,
+        }
+    ],
+
+    "external_reference": str(update.effective_user.id)
+}
+    
 
     preference_response = sdk.preference().create(preference_data)
     preference = preference_response["response"]
