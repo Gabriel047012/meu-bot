@@ -275,11 +275,34 @@ async def mercadopago_webhook(request: Request):
         pagamento = await verificar_pagamento(payment_id)
 
         print("Pagamento consultado:")
-
         print(pagamento)
 
-    return {"status": "ok"}
+        status = pagamento["status"]
+        external_reference = pagamento.get("external_reference")
 
+        if status != "approved":
+            return {"status": "aguardando_pagamento"}
+
+        pagamentos = carregar_pagamentos()
+
+        if external_reference in pagamentos:
+
+            pagamentos[external_reference]["status"] = "approved"
+            pagamentos[external_reference]["payment_id"] = payment_id
+            pagamentos[external_reference]["aprovado_em"] = datetime.now().isoformat()
+
+            salvar_pagamentos(pagamentos)
+
+            await telegram_app.bot.send_message(
+                chat_id=int(external_reference),
+                text=(
+                    "✅ Pagamento aprovado com sucesso!\n\n"
+                    "Seu acesso VIP será liberado automaticamente em instantes."
+                ),
+            )
+
+    return {"status": "ok"}
+    
 
 @app.get("/")
 async def home():
