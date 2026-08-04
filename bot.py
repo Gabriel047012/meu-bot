@@ -1,11 +1,14 @@
 import os
 
+import asyncio
+
 import json
 from datetime import datetime
 from pathlib import Path
 
 import uuid
 from datetime import datetime, timedelta
+
 import mercadopago
 from fastapi import FastAPI, Request
 from telegram import Update
@@ -22,6 +25,54 @@ MP_ACCESS_TOKEN = os.environ["MP_ACCESS_TOKEN"]
 WEBHOOK_URL = "https://meu-bot-pwx3.onrender.com"
 
 sdk = mercadopago.SDK(MP_ACCESS_TOKEN)
+
+def consultar_pagamento(payment_id):
+    try:
+        pagamento = sdk.payment().get(payment_id)
+        return pagamento["response"]
+    except Exception as erro:
+        print("Erro ao consultar pagamento:", erro)
+        return None
+
+async def verificar_pagamentos():
+
+    while True:
+
+        pagamentos = carregar_pagamentos()
+
+        for usuario_id, dados in pagamentos.items():
+
+            if dados["status"] != "pending":
+                continue
+
+            if "payment_id" not in dados:
+                continue
+
+            pagamento = consultar_pagamento(
+                dados["payment_id"]
+            )
+
+            if not pagamento:
+                continue
+
+            status = pagamento["status"]
+
+            if status == "approved":
+
+                dados["status"] = "approved"
+
+                salvar_pagamentos(pagamentos)
+
+                try:
+                    await telegram_app.bot.send_message(
+                        chat_id=int(usuario_id),
+                        text="🎉 Pagamento aprovado com sucesso!"
+                    )
+
+                except Exception as erro:
+                    print(erro)
+
+        await asyncio.sleep(15)
 
 # Banco de dados temporário
 usuarios = {}
