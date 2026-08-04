@@ -28,9 +28,31 @@ telegram_app = Application.builder().token(TOKEN).build()
 app = FastAPI()
 
 
-async def pix(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def assinar(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    preference_data = {
+        "items": [
+            {
+                "title": "Plano Mensal",
+                "quantity": 1,
+                "currency_id": "BRL",
+                "unit_price": 4.99,
+            }
+        ]
+    }
+
+    preference_response = sdk.preference().create(preference_data)
+    preference = preference_response["response"]
+
     await update.message.reply_text(
-        "✅ Mercado Pago conectado com sucesso!"
+        f"""💳 Assinatura Premium
+
+Valor: R$ 4,99
+
+Clique no link abaixo para pagar:
+
+{preference['init_point']}
+"""
     )
 
 
@@ -113,7 +135,7 @@ telegram_app.add_handler(CommandHandler("start", start))
 telegram_app.add_handler(CommandHandler("planos", planos))
 telegram_app.add_handler(CommandHandler("previas", previas))
 telegram_app.add_handler(CommandHandler("id", pegar_id))
-telegram_app.add_handler(CommandHandler("pix", pix))
+telegram_app.add_handler(CommandHandler("assinar", assinar))
 
 telegram_app.add_handler(MessageHandler(filters.PHOTO, pegar_id))
 telegram_app.add_handler(MessageHandler(filters.VIDEO, pegar_id))
