@@ -1,6 +1,6 @@
 import os
-import json
 
+import json
 from datetime import datetime
 from pathlib import Path
 
@@ -63,6 +63,18 @@ async def assinar(update: Update, context: ContextTypes.DEFAULT_TYPE):
     preference_response = sdk.preference().create(preference_data)
     preference = preference_response["response"]
 
+    pagamentos = carregar_pagamentos()
+
+    pagamentos[str(update.effective_user.id)] = {
+        "telegram_id": update.effective_user.id,
+        "nome": update.effective_user.first_name,
+        "preference_id": preference["id"],
+        "status": "pending",
+        "criado_em": datetime.now().isoformat()
+    }
+
+    salvar_pagamentos(pagamentos)
+
     await update.message.reply_text(
         f"""💳 Assinatura Premium
 
@@ -70,7 +82,9 @@ Valor: R$ 4,99
 
 Clique no link abaixo para pagar:
 
-{preference['init_point']}
+{preference["init_point"]}
+
+Após realizar o pagamento, aguarde a confirmação automática. ✅
 """
     )
 
