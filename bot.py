@@ -247,6 +247,16 @@ async def webhook(request: Request):
     return {"ok": True}
 
 
+@app.post("/mercadopago")
+async def mercadopago_webhook(request: Request):
+
+    dados = await request.json()
+
+    print("Webhook Mercado Pago:", dados)
+
+    return {"status": "ok"}
+
+
 @app.get("/")
 async def home():
     return {"status": "Bot online!"}
