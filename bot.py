@@ -1,5 +1,7 @@
 import os
 
+import uuid
+from datetime import datetime, timedelta
 import mercadopago
 from fastapi import FastAPI, Request
 from telegram import Update
@@ -16,6 +18,10 @@ MP_ACCESS_TOKEN = os.environ["MP_ACCESS_TOKEN"]
 WEBHOOK_URL = "https://meu-bot-pwx3.onrender.com"
 
 sdk = mercadopago.SDK(MP_ACCESS_TOKEN)
+
+# Banco de dados temporário
+usuarios = {}
+pagamentos = {}
 
 telegram_app = Application.builder().token(TOKEN).build()
 
