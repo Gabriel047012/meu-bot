@@ -20,6 +20,8 @@ from telegram.ext import (
     filters,
 )
 
+GRUPO_VIP = -1003990872882
+
 TOKEN = os.environ["TOKEN"]
 MP_ACCESS_TOKEN = os.environ["MP_ACCESS_TOKEN"]
 WEBHOOK_URL = "https://meu-bot-pwx3.onrender.com"
@@ -293,14 +295,20 @@ async def mercadopago_webhook(request: Request):
 
             salvar_pagamentos(pagamentos)
 
-            await telegram_app.bot.send_message(
-                chat_id=int(external_reference),
-                text=(
-                    "✅ Pagamento aprovado com sucesso!\n\n"
-                    "Seu acesso VIP será liberado automaticamente em instantes."
-                ),
-            )
+            convite = await telegram_app.bot.create_chat_invite_link(
+    chat_id=GRUPO_VIP,
+    member_limit=1
+)
 
+await telegram_app.bot.send_message(
+    chat_id=int(external_reference),
+    text=(
+        "🎉 Pagamento aprovado com sucesso!\n\n"
+        "Seu acesso foi liberado.\n\n"
+        f"Entre no grupo VIP pelo link abaixo:\n\n"
+        f"{convite.invite_link}"
+    ),
+)
     return {"status": "ok"}
     
 
