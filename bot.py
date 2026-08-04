@@ -271,44 +271,123 @@ async def mercadopago_webhook(request: Request):
     print("=== WEBHOOK RECEBIDO ===")
     print(dados)
 
+
+    # Verifica se é evento de pagamento
     if dados.get("type") != "payment":
+
         print("Evento ignorado")
-        return {"status": "evento ignorado"}
+        
+        return {
+            "status": "evento_ignorado"
+        }
+
 
     print("Evento de pagamento recebido!")
 
-    payment_id = dados["data"]["id"]
+
+    # Pega ID do pagamento
+
+    try:
+        payment_id = dados["data"]["id"]
+
+    except Exception:
+
+        print("ID do pagamento não encontrado")
+
+        return {
+            "status": "id_invalido"
+        }
+
 
     print(f"Payment ID: {payment_id}")
 
+
+    # Consulta pagamento no Mercado Pago
+
     pagamento = await verificar_pagamento(payment_id)
+
 
     print("Resposta do Mercado Pago:")
     print(pagamento)
 
+
+
+    # Proteção caso o pagamento não exista
+
+    if pagamento.get("status") == 404:
+
+        print("Pagamento não encontrado no Mercado Pago")
+
+        return {
+            "status": "pagamento_nao_encontrado"
+        }
+
+
+
+    # Verifica se veio uma resposta válida
+
+    if "status" not in pagamento:
+
+        print("Resposta inválida do Mercado Pago")
+
+        return {
+            "status": "erro_consulta_pagamento"
+        }
+
+
+
     status = pagamento["status"]
+
     external_reference = pagamento.get("external_reference")
 
+
+
     print(f"Status do pagamento: {status}")
+
     print(f"Usuário Telegram: {external_reference}")
 
 
-    # Pagamento ainda não aprovado
+
+    # Se ainda não foi aprovado
+
     if status != "approved":
-        return {"status": "aguardando_pagamento"}
+
+        return {
+            "status": "aguardando_pagamento"
+        }
+
+
+
+    # Verifica se tem usuário vinculado
+
+    if not external_reference:
+
+        print("External reference não encontrada")
+
+        return {
+            "status": "usuario_nao_identificado"
+        }
+
 
 
     pagamentos = carregar_pagamentos()
 
 
-    # Verifica se encontrou o usuário
+
+    # Verifica se usuário existe
+
     if external_reference not in pagamentos:
-        print("Usuário não encontrado nos pagamentos")
-        return {"status": "usuario_nao_encontrado"}
+
+        print("Usuário não encontrado no arquivo de pagamentos")
+
+        return {
+            "status": "usuario_nao_encontrado"
+        }
 
 
-    # PROTEÇÃO CONTRA DUPLICIDADE
-    # Se já foi aprovado antes, não cria outro convite
+
+    # Proteção contra liberar duas vezes
+
     if pagamentos[external_reference].get("status") == "approved":
 
         print("Pagamento já processado anteriormente")
@@ -318,50 +397,83 @@ async def mercadopago_webhook(request: Request):
         }
 
 
-    # Atualiza pagamento
+
+    # Salva aprovação
 
     pagamentos[external_reference]["status"] = "approved"
+
     pagamentos[external_reference]["payment_id"] = payment_id
+
     pagamentos[external_reference]["aprovado_em"] = datetime.now().isoformat()
+
 
     salvar_pagamentos(pagamentos)
 
 
-    print("Pagamento aprovado e salvo!")
+
+    print("Pagamento salvo como aprovado!")
+
 
 
     # Cria convite único
 
     convite = await telegram_app.bot.create_chat_invite_link(
+
         chat_id=GRUPO_VIP,
+
         member_limit=1
+
     )
 
 
-    # Envia acesso para o usuário
+
+    print("Convite criado:")
+
+    print(convite.invite_link)
+
+
+
+    # Envia acesso ao usuário
 
     await telegram_app.bot.send_message(
+
         chat_id=int(external_reference),
+
         text=(
+
             "🎉 Pagamento aprovado com sucesso!\n\n"
+
             "Seu acesso foi liberado.\n\n"
+
             "Entre no grupo VIP pelo link abaixo:\n\n"
+
             f"{convite.invite_link}"
+
         ),
+
     )
 
 
-    print("Convite enviado para o usuário!")
+
+    print("Mensagem enviada ao Telegram!")
+
 
 
     return {
+
         "status": "ok"
+
     }
+
+
 
 
 
 @app.get("/")
 async def home():
+
     return {
+
         "status": "Bot online!"
-    }
+
+        }
