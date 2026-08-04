@@ -268,51 +268,100 @@ async def mercadopago_webhook(request: Request):
 
     dados = await request.json()
 
+    print("=== WEBHOOK RECEBIDO ===")
     print(dados)
 
-    if dados.get("type") == "payment":
+    if dados.get("type") != "payment":
+        print("Evento ignorado")
+        return {"status": "evento ignorado"}
 
-        payment_id = dados["data"]["id"]
+    print("Evento de pagamento recebido!")
 
-        pagamento = await verificar_pagamento(payment_id)
+    payment_id = dados["data"]["id"]
 
-        print("Pagamento consultado:")
-        print(pagamento)
+    print(f"Payment ID: {payment_id}")
 
-        status = pagamento["status"]
-        external_reference = pagamento.get("external_reference")
+    pagamento = await verificar_pagamento(payment_id)
 
-        if status != "approved":
-            return {"status": "aguardando_pagamento"}
+    print("Resposta do Mercado Pago:")
+    print(pagamento)
 
-        pagamentos = carregar_pagamentos()
+    status = pagamento["status"]
+    external_reference = pagamento.get("external_reference")
 
-        if external_reference in pagamentos:
+    print(f"Status do pagamento: {status}")
+    print(f"Usuário Telegram: {external_reference}")
 
-            pagamentos[external_reference]["status"] = "approved"
-            pagamentos[external_reference]["payment_id"] = payment_id
-            pagamentos[external_reference]["aprovado_em"] = datetime.now().isoformat()
 
-            salvar_pagamentos(pagamentos)
+    # Pagamento ainda não aprovado
+    if status != "approved":
+        return {"status": "aguardando_pagamento"}
 
-            convite = await telegram_app.bot.create_chat_invite_link(
-                chat_id=GRUPO_VIP,
-                member_limit=1
-            )
 
-            await telegram_app.bot.send_message(
-                chat_id=int(external_reference),
-                text=(
-                    "🎉 Pagamento aprovado com sucesso!\n\n"
-                    "Seu acesso foi liberado.\n\n"
-                    f"Entre no grupo VIP pelo link abaixo:\n\n"
-                    f"{convite.invite_link}"
-                ),
-            )
+    pagamentos = carregar_pagamentos()
 
-    return {"status": "ok"}
-    
+
+    # Verifica se encontrou o usuário
+    if external_reference not in pagamentos:
+        print("Usuário não encontrado nos pagamentos")
+        return {"status": "usuario_nao_encontrado"}
+
+
+    # PROTEÇÃO CONTRA DUPLICIDADE
+    # Se já foi aprovado antes, não cria outro convite
+    if pagamentos[external_reference].get("status") == "approved":
+
+        print("Pagamento já processado anteriormente")
+
+        return {
+            "status": "pagamento_ja_processado"
+        }
+
+
+    # Atualiza pagamento
+
+    pagamentos[external_reference]["status"] = "approved"
+    pagamentos[external_reference]["payment_id"] = payment_id
+    pagamentos[external_reference]["aprovado_em"] = datetime.now().isoformat()
+
+    salvar_pagamentos(pagamentos)
+
+
+    print("Pagamento aprovado e salvo!")
+
+
+    # Cria convite único
+
+    convite = await telegram_app.bot.create_chat_invite_link(
+        chat_id=GRUPO_VIP,
+        member_limit=1
+    )
+
+
+    # Envia acesso para o usuário
+
+    await telegram_app.bot.send_message(
+        chat_id=int(external_reference),
+        text=(
+            "🎉 Pagamento aprovado com sucesso!\n\n"
+            "Seu acesso foi liberado.\n\n"
+            "Entre no grupo VIP pelo link abaixo:\n\n"
+            f"{convite.invite_link}"
+        ),
+    )
+
+
+    print("Convite enviado para o usuário!")
+
+
+    return {
+        "status": "ok"
+    }
+
+
 
 @app.get("/")
 async def home():
-    return {"status": "Bot online!"}
+    return {
+        "status": "Bot online!"
+    }
