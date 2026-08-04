@@ -1,4 +1,8 @@
 import os
+import json
+
+from datetime import datetime
+from pathlib import Path
 
 import uuid
 from datetime import datetime, timedelta
@@ -26,6 +30,21 @@ pagamentos = {}
 telegram_app = Application.builder().token(TOKEN).build()
 
 app = FastAPI()
+
+ARQUIVO_PAGAMENTOS = Path("pagamentos.json")
+
+
+def carregar_pagamentos():
+    if not ARQUIVO_PAGAMENTOS.exists():
+        return {}
+
+    with open(ARQUIVO_PAGAMENTOS, "r", encoding="utf-8") as arquivo:
+        return json.load(arquivo)
+
+
+def salvar_pagamentos(dados):
+    with open(ARQUIVO_PAGAMENTOS, "w", encoding="utf-8") as arquivo:
+        json.dump(dados, arquivo, indent=4, ensure_ascii=False)
 
 
 async def assinar(update: Update, context: ContextTypes.DEFAULT_TYPE):
