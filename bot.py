@@ -100,6 +100,9 @@ def salvar_pagamentos(dados):
 
 async def assinar(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
+
+
+
 preference_data = {
     "items": [
         {
