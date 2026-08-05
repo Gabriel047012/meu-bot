@@ -74,7 +74,7 @@ class Settings:
         if x.strip().isdigit()
     ])
 
-    # Parâmetros do Grupo VIP
+        # Parâmetros do Grupo VIP
     GRUPO_VIP: int = int(os.environ.get("GRUPO_VIP", "-1003990872882"))
     EXPIRACAO_CONVITE_MINUTOS: int = 10
     HORAS_REAPROVEITAMENTO_PAGAMENTO: int = 24
@@ -94,40 +94,45 @@ class Settings:
     PREVIA_VIDEO_2_ID: str = "BAACAgEAAxkBAAOaanCWf0IJlHtAsOHtmHRrpZy_R7EAAn8IAAKrO4hHVyghlY3FbqQ9BA"
 
     # Catálogo Completo e Escalável de Planos
-PLANOS_DISPONIVEIS: Dict[str, PlanoConfig] = {
-    "mensal": PlanoConfig(
-        id="mensal",
-        nome="Plano Mensal",
-        valor=4.99,
-        dias=30,
-        descricao="Acesso VIP completo por 30 dias."
-    ),
-    "trimestral": PlanoConfig(
-        id="trimestral",
-        nome="Plano Trimestral",
-        valor=12.90,
-        dias=90,
-        descricao="Acesso VIP completo com desconto por 90 dias."
-    ),
-    "anual": PlanoConfig(
-        id="anual",
-        nome="Plano Anual",
-        valor=39.90,
-        dias=365,
-        descricao="Acesso VIP completo de longo prazo por 365 dias."
-    ),
-}
+    PLANOS_DISPONIVEIS: Dict[str, PlanoConfig] = {
+        "mensal": PlanoConfig(
+            id="mensal",
+            nome="Plano Mensal",
+            valor=4.99,
+            dias=30,
+            descricao="Acesso VIP completo por 30 dias."
+        ),
+        "trimestral": PlanoConfig(
+            id="trimestral",
+            nome="Plano Trimestral",
+            valor=12.90,
+            dias=90,
+            descricao="Acesso VIP completo com desconto por 90 dias."
+        ),
+        "anual": PlanoConfig(
+            id="anual",
+            nome="Plano Anual",
+            valor=39.90,
+            dias=365,
+            descricao="Acesso VIP completo de longo prazo por 365 dias."
+        ),
+    }
 
     @classmethod
     def validar_configuracoes_criticas(cls) -> None:
         """Verifica na inicialização se os parâmetros obrigatórios foram providos."""
         ausentes = []
+
         if not cls.TOKEN:
             ausentes.append("TOKEN")
+
         if not cls.DATABASE_URL:
             ausentes.append("DATABASE_URL")
+
         if ausentes:
-            logger.warning(f"Parâmetros de ambiente ausentes: {', '.join(ausentes)}. Verifique o ambiente de produção.")
+            logger.warning(
+                f"Parâmetros de ambiente ausentes: {', '.join(ausentes)}. Verifique o ambiente de produção."
+            )
 
 
 # Instância global de configuração
