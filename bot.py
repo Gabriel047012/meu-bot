@@ -1957,10 +1957,10 @@ telegram_app.add_handler(CommandHandler("ban_usuario", ban_usuario_admin))
 telegram_app.add_handler(CommandHandler("unban_usuario", unban_usuario_admin))
 telegram_app.add_handler(CommandHandler("backup_db", backup_db_admin))
 
-# Utilitário /id e captura de mídias
-telegram_app.add_handler(CommandHandler("id", pegar_id))
-telegram_app.add_handler(MessageHandler(filters.PHOTO, pegar_id))
-telegram_app.add_handler(MessageHandler(filters.VIDEO, pegar_id))
+# Utilitário /id e captura de mídias (somente conversa privada)
+telegram_app.add_handler(CommandHandler("id", pegar_id, filters=filters.ChatType.PRIVATE))
+telegram_app.add_handler(MessageHandler(filters.PHOTO & filters.ChatType.PRIVATE, pegar_id))
+telegram_app.add_handler(MessageHandler(filters.VIDEO & filters.ChatType.PRIVATE, pegar_id))
 
 # Escuta de alterações nos membros do Grupo VIP
 telegram_app.add_handler(ChatMemberHandler(verificar_entrada_membro_grupo, ChatMemberHandler.CHAT_MEMBER))
