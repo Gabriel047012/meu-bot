@@ -1,5 +1,7 @@
 import os
 
+import psycopg
+
 import asyncio
 
 import json
@@ -24,9 +26,60 @@ GRUPO_VIP = -1003990872882
 
 TOKEN = os.environ["TOKEN"]
 MP_ACCESS_TOKEN = os.environ["MP_ACCESS_TOKEN"]
+DATABASE_URL = os.environ["DATABASE_URL"]
 WEBHOOK_URL = "https://meu-bot-pwx3.onrender.com"
 
 sdk = mercadopago.SDK(MP_ACCESS_TOKEN)
+
+conn = psycopg.connect(DATABASE_URL)
+
+cursor = conn.cursor()
+
+
+def criar_tabelas():
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS usuarios (
+
+            telegram_id BIGINT PRIMARY KEY,
+
+            nome TEXT,
+
+            cadastrado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS pagamentos (
+
+            payment_id TEXT PRIMARY KEY,
+
+            telegram_id BIGINT,
+
+            status TEXT,
+
+            valor NUMERIC,
+
+            criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+            aprovado_em TIMESTAMP
+        );
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS assinaturas (
+
+            telegram_id BIGINT PRIMARY KEY,
+
+            inicio TIMESTAMP,
+
+            vencimento TIMESTAMP,
+
+            ativa BOOLEAN
+        );
+    """)
+
+    conn.commit()
 
 def consultar_pagamento(payment_id):
     try:
@@ -243,6 +296,7 @@ telegram_app.add_handler(MessageHandler(filters.VIDEO, pegar_id))
 
 @app.on_event("startup")
 async def startup():
+    criar_tabelas()
     await telegram_app.initialize()
     await telegram_app.start()
     await telegram_app.bot.set_webhook(f"{WEBHOOK_URL}/webhook")
