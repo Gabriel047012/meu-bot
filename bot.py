@@ -155,6 +155,11 @@ def salvar_pagamentos(dados):
 
 async def assinar(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
+    salvar_usuario(
+    update.effective_user.id,
+    update.effective_user.first_name
+    )
+
     preference_data = {
         "items": [
             {
@@ -297,6 +302,20 @@ telegram_app.add_handler(MessageHandler(filters.VIDEO, pegar_id))
 @app.on_event("startup")
 async def startup():
     criar_tabelas()
+    def salvar_usuario(telegram_id, nome):
+
+    cursor.execute(
+        """
+        INSERT INTO usuarios (telegram_id, nome)
+        VALUES (%s, %s)
+        ON CONFLICT (telegram_id)
+        DO NOTHING;
+        """,
+        (telegram_id, nome)
+    )
+
+    conn.commit()
+    
     await telegram_app.initialize()
     await telegram_app.start()
     await telegram_app.bot.set_webhook(f"{WEBHOOK_URL}/webhook")
