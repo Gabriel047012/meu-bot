@@ -93,7 +93,10 @@ class Settings:
     PREVIA_FOTO_2_ID: str = "AgACAgEAAxkBAAIBcWpzvG6_-ZPWK_jzk9AzAAGY1x6BKAACwAxrG1fimUfW6cvoo_rmnAEAAwIAA3kAAz0E"
     PREVIA_VIDEO_1_ID: str = "BAACAgEAAxkBAANcam4MYXQ93cFRlJlFTXq-067_lA4AAkAIAAJgpnFHBio6HNjhku09BA"
     PREVIA_VIDEO_2_ID: str = "BAACAgEAAxkBAAOaanCWf0IJlHtAsOHtmHRrpZy_R7EAAn8IAAKrO4hHVyghlY3FbqQ9BA"
-
+    PREVIA_VIDEO_3_ID: str = "BAACAgEAAxkBAAIBhmpzyy_gm2EX1G_q12mykjI0v9nbAAKOBgAC3jKhRrWIAXURQKm3PQQ"
+    PREVIA_VIDEO_4_ID: str = "BAACAgEAAxkBAAIBh2pzy0XHVqUiwpF0PUSG_y_t9UgyAAKIBAACMC4gRTLUNsRZp5KuPQQ"
+    
+    
     # Catálogo Completo e Escalável de Planos
     PLANOS_DISPONIVEIS: Dict[str, PlanoConfig] = {
         "mensal": PlanoConfig(
@@ -1335,6 +1338,9 @@ async def previas(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_photo(photo=cfg.PREVIA_FOTO_2_ID)
         await update.message.reply_video(video=cfg.PREVIA_VIDEO_1_ID)
         await update.message.reply_video(video=cfg.PREVIA_VIDEO_2_ID)
+        await update.message.reply_video(video=cfg.PREVIA_VIDEO_3_ID)
+        await update.message.reply_video(video=cfg.PREVIA_VIDEO_4_ID)
+    
     except Exception as erro:
         logger.error(f"Erro no envio das mídias de prévia: {erro}", exc_info=True)
         registrar_erro_sistema("previas", str(erro))
