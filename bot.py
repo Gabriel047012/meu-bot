@@ -89,7 +89,8 @@ class Settings:
     START_TIME: datetime = datetime.now(timezone.utc)
 
     # Identificadores de Mídias de Demonstração
-    PREVIA_FOTO_ID: str = "AgACAgEAAxkBAAOtanCrgcc39SuAvHBKLD3WUKF1ubUAAkoNaxurO4hHjSbViv9JwlABAAMCAAN5AAM9BA"
+    PREVIA_FOTO_1_ID: str = "AgACAgEAAxkBAAIBb2pzvAw0dqtOYV_wI9nngyJdQEpGAAK_DGsbV-KZR0g4xAABFasQogEAAwIAA3kAAz0E"
+    PREVIA_FOTO_2_ID: str = "AgACAgEAAxkBAAIBcWpzvG6_-ZPWK_jzk9AzAAGY1x6BKAACwAxrG1fimUfW6cvoo_rmnAEAAwIAA3kAAz0E"
     PREVIA_VIDEO_1_ID: str = "BAACAgEAAxkBAANcam4MYXQ93cFRlJlFTXq-067_lA4AAkAIAAJgpnFHBio6HNjhku09BA"
     PREVIA_VIDEO_2_ID: str = "BAACAgEAAxkBAAOaanCWf0IJlHtAsOHtmHRrpZy_R7EAAn8IAAKrO4hHVyghlY3FbqQ9BA"
 
@@ -1330,7 +1331,8 @@ async def previas(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     await update.message.reply_text("🔥😈Confira algumas prévias:")
     try:
-        await update.message.reply_photo(photo=cfg.PREVIA_FOTO_ID)
+        await update.message.reply_photo(photo=cfg.PREVIA_FOTO_1_ID)
+        await update.message.reply_photo(photo=cfg.PREVIA_FOTO_2_ID)
         await update.message.reply_video(video=cfg.PREVIA_VIDEO_1_ID)
         await update.message.reply_video(video=cfg.PREVIA_VIDEO_2_ID)
     except Exception as erro:
