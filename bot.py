@@ -94,29 +94,29 @@ class Settings:
     PREVIA_VIDEO_2_ID: str = "BAACAgEAAxkBAAOaanCWf0IJlHtAsOHtmHRrpZy_R7EAAn8IAAKrO4hHVyghlY3FbqQ9BA"
 
     # Catálogo Completo e Escalável de Planos
-    PLANOS_DISPONIVEIS: Dict[str, PlanoConfig] = field(default_factory=lambda: {
-        "mensal": PlanoConfig(
-            id="mensal",
-            nome="Plano Mensal",
-            valor=4.99,
-            dias=30,
-            descricao="Acesso VIP completo por 30 dias."
-        ),
-        "trimestral": PlanoConfig(
-            id="trimestral",
-            nome="Plano Trimestral",
-            valor=12.90,
-            dias=90,
-            descricao="Acesso VIP completo com desconto por 90 dias."
-        ),
-        "anual": PlanoConfig(
-            id="anual",
-            nome="Plano Anual",
-            valor=39.90,
-            dias=365,
-            descricao="Acesso VIP completo de longo prazo por 365 dias."
-        ),
-    })
+PLANOS_DISPONIVEIS: Dict[str, PlanoConfig] = {
+    "mensal": PlanoConfig(
+        id="mensal",
+        nome="Plano Mensal",
+        valor=4.99,
+        dias=30,
+        descricao="Acesso VIP completo por 30 dias."
+    ),
+    "trimestral": PlanoConfig(
+        id="trimestral",
+        nome="Plano Trimestral",
+        valor=12.90,
+        dias=90,
+        descricao="Acesso VIP completo com desconto por 90 dias."
+    ),
+    "anual": PlanoConfig(
+        id="anual",
+        nome="Plano Anual",
+        valor=39.90,
+        dias=365,
+        descricao="Acesso VIP completo de longo prazo por 365 dias."
+    ),
+}
 
     @classmethod
     def validar_configuracoes_criticas(cls) -> None:
