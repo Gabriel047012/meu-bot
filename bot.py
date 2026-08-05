@@ -95,6 +95,7 @@ class Settings:
     PREVIA_VIDEO_2_ID: str = "BAACAgEAAxkBAAOaanCWf0IJlHtAsOHtmHRrpZy_R7EAAn8IAAKrO4hHVyghlY3FbqQ9BA"
     PREVIA_VIDEO_3_ID: str = "BAACAgEAAxkBAAIBhmpzyy_gm2EX1G_q12mykjI0v9nbAAKOBgAC3jKhRrWIAXURQKm3PQQ"
     PREVIA_VIDEO_4_ID: str = "BAACAgEAAxkBAAIBh2pzy0XHVqUiwpF0PUSG_y_t9UgyAAKIBAACMC4gRTLUNsRZp5KuPQQ"
+    PREVIA_VIDEO_5_ID: str = "BAACAgEAAyEFAATt3-MyAAOZanPNKxRaq7wDq0s3HpdW_rjsEu4AAlMEAAI5BxhGvQoaGtNPVd49BA"
     
     
     # Catálogo Completo e Escalável de Planos
@@ -1340,6 +1341,7 @@ async def previas(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_video(video=cfg.PREVIA_VIDEO_2_ID)
         await update.message.reply_video(video=cfg.PREVIA_VIDEO_3_ID)
         await update.message.reply_video(video=cfg.PREVIA_VIDEO_4_ID)
+        await update.message.reply_video(video=cfg.PREVIA_VIDEO_5_ID)
     
     except Exception as erro:
         logger.error(f"Erro no envio das mídias de prévia: {erro}", exc_info=True)
