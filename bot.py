@@ -242,27 +242,27 @@ def criar_tabelas_e_indices() -> None:
                     );
                 """)
 
-# Migração automática para bancos já existentes
-cur.execute("""
-    ALTER TABLE pagamentos
-    ADD COLUMN IF NOT EXISTS preference_id TEXT;
-""")
+                # Migração automática para bancos já existentes
+                cur.execute("""
+                    ALTER TABLE pagamentos
+                    ADD COLUMN IF NOT EXISTS preference_id TEXT;
+                """)
 
-cur.execute("""
-    ALTER TABLE pagamentos
-    ADD COLUMN IF NOT EXISTS plano TEXT DEFAULT 'mensal';
-""")
+                cur.execute("""
+                    ALTER TABLE pagamentos
+                    ADD COLUMN IF NOT EXISTS plano TEXT DEFAULT 'mensal';
+                """)
 
-cur.execute("""
-    ALTER TABLE pagamentos
-    ADD COLUMN IF NOT EXISTS metodo_pagamento TEXT DEFAULT 'mercadopago';
-""")
+                cur.execute("""
+                    ALTER TABLE pagamentos
+                    ADD COLUMN IF NOT EXISTS metodo_pagamento TEXT DEFAULT 'mercadopago';
+                """)
 
-cur.execute("""
-    ALTER TABLE pagamentos
-    ADD COLUMN IF NOT EXISTS init_point TEXT;
-""")
-
+                cur.execute("""
+                    ALTER TABLE pagamentos
+                    ADD COLUMN IF NOT EXISTS init_point TEXT;
+                """)
+                
                 # 4. Tabela de Assinaturas Ativas
                 cur.execute("""
                     CREATE TABLE IF NOT EXISTS assinaturas (
