@@ -299,10 +299,7 @@ telegram_app.add_handler(MessageHandler(filters.PHOTO, pegar_id))
 telegram_app.add_handler(MessageHandler(filters.VIDEO, pegar_id))
 
 
-@app.on_event("startup")
-async def startup():
-    criar_tabelas()
-    def salvar_usuario(telegram_id, nome):
+def salvar_usuario(telegram_id, nome):
 
     cursor.execute(
         """
@@ -315,10 +312,20 @@ async def startup():
     )
 
     conn.commit()
-    
+
+
+@app.on_event("startup")
+async def startup():
+
+    criar_tabelas()
+
     await telegram_app.initialize()
     await telegram_app.start()
-    await telegram_app.bot.set_webhook(f"{WEBHOOK_URL}/webhook")
+
+    await telegram_app.bot.set_webhook(
+        f"{WEBHOOK_URL}/webhook"
+    )
+
     print("Bot iniciado!")
 
 
