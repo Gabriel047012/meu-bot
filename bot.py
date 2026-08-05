@@ -1281,11 +1281,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
     await update.message.reply_text(
-        """OQUE VOCÊ VAI ENCONTRAR AQUI?🔥
+        """😈OQUE VOCÊ VAI ENCONTRAR AQUI?🔥
 
-Lanches e combos
+🔞Novinhas (+18)
+🐂Casadas e cornos
+🍒Peitudas
+🍑Rabudas e bucetudas
 
-
+E MUITO MAIS!!!
 ---
 
 📋PARA CONSULTAR OS PLANOS DIGITE:
@@ -1325,7 +1328,7 @@ async def previas(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text(err_msg or "Acesso negado.")
         return
 
-    await update.message.reply_text("🔥 Confira algumas prévias:")
+    await update.message.reply_text("🔥😈Confira algumas prévias:")
     try:
         await update.message.reply_photo(photo=cfg.PREVIA_FOTO_ID)
         await update.message.reply_video(video=cfg.PREVIA_VIDEO_1_ID)
