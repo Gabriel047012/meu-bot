@@ -203,6 +203,7 @@ def criar_tabelas_e_indices() -> None:
     try:
         with obter_conexao() as conn:
             with conn.cursor() as cur:
+
                 # 1. Tabela Principal de Usuários
                 cur.execute("""
                     CREATE TABLE IF NOT EXISTS usuarios (
@@ -225,21 +226,21 @@ def criar_tabelas_e_indices() -> None:
                 """)
 
                 # 3. Tabela de Pagamentos com migração automática
-cur.execute("""
-    CREATE TABLE IF NOT EXISTS pagamentos (
-        id SERIAL PRIMARY KEY,
-        payment_id TEXT UNIQUE,
-        preference_id TEXT,
-        telegram_id BIGINT REFERENCES usuarios(telegram_id) ON DELETE CASCADE,
-        valor NUMERIC(10, 2) NOT NULL,
-        status TEXT NOT NULL,
-        plano TEXT DEFAULT 'mensal',
-        metodo_pagamento TEXT DEFAULT 'mercadopago',
-        init_point TEXT,
-        criado_em TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        aprovado_em TIMESTAMP WITH TIME ZONE
-    );
-""")
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS pagamentos (
+                        id SERIAL PRIMARY KEY,
+                        payment_id TEXT UNIQUE,
+                        preference_id TEXT,
+                        telegram_id BIGINT REFERENCES usuarios(telegram_id) ON DELETE CASCADE,
+                        valor NUMERIC(10, 2) NOT NULL,
+                        status TEXT NOT NULL,
+                        plano TEXT DEFAULT 'mensal',
+                        metodo_pagamento TEXT DEFAULT 'mercadopago',
+                        init_point TEXT,
+                        criado_em TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                        aprovado_em TIMESTAMP WITH TIME ZONE
+                    );
+                """)
 
 # Migração automática para bancos já existentes
 cur.execute("""
